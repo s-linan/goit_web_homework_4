@@ -11,7 +11,7 @@ from jinja2 import Environment, FileSystemLoader
 
 BASE_DIR = Path()
 BUFFER_SIZE = 1024
-HTTP_PORT = 8080
+HTTP_PORT = 3000
 HTTP_HOST = '0.0.0.0'
 SOCKET_HOST = '127.0.0.1'
 SOCKET_PORT = 5000
@@ -28,7 +28,7 @@ class GoitFramework(BaseHTTPRequestHandler):
             case '/':
                 self.send_html('index.html')
             case '/contact':
-                self.send_html('message.html')
+                self.send_html('contact.html')
             case '/blog':
                 self.render_template('blog.jinja')
             case _:
@@ -86,8 +86,9 @@ def save_data_from_form(data):
     parse_data = urllib.parse.unquote_plus(data.decode())
     try:
         parse_dict = {key: value for key, value in [el.split('=') for el in parse_data.split('&')]}
+        data.update(parse_dict)
         with open('data/data.json', 'w', encoding='utf-8') as file:
-            json.dump(parse_dict, file, ensure_ascii=False, indent=4)
+            json.dump(data, file, ensure_ascii=False, indent=4)
     except ValueError as err:
         logging.error(err)
     except OSError as err:
